@@ -1,13 +1,9 @@
-
-document.getElementById("make_chart_button").addEventListener("click", make_chart);
-
 function make_chart() {
 
     const chart = Highcharts.chart('container', {
-        chart: {type: 'bar', backgroundColor: '#f5f5f5'},
-        title: {text: '<span style="font-family: Arial; color: black"><b>Loading Time</b> ⏱</span>',
-            align: 'left'
-        },
+        chart: {type: 'bar', backgroundColor: '#ffffff'},
+        //title: {text: '<span style="font-family: Arial; color: black"><b>Loading Time</b> ⏱</span>', align: 'left'},
+        title: false,
         xAxis: {categories: wb_names,
             type: 'category',
             title: {text: null},

@@ -1,16 +1,19 @@
 // event listeners
-document.getElementById("single_test_button").addEventListener("click", single_test);
+//document.getElementById("single_test_button").addEventListener("click", single_test);
+document.querySelectorAll(".single_test_btn").forEach( btn => btn.addEventListener("click", single_test));
 document.getElementById("clear_tests_button").addEventListener("click", clearTestResults);
 document.getElementById("get_sheets_button").addEventListener("click", getWorksheetNames);
 document.getElementById("clear_sheets_button").addEventListener("click", clearWorksheetNames);
+document.getElementById("show_results_btn").addEventListener("click", show_results);
+document.querySelector(".results_back").addEventListener("click", hide_results);
 
+let wb_names = [];         // array of tested wb names
+let avg_list = [];         // array of test time
 let table_data = [];       // array for store table data
 let link_list = [];        // array of tested links
 let start_dttm_list = [];  // array of testing start time
 let viz_counter_list = []; // array of num of visualisations in tested link
-let avg_list = [];         // array of test time
 let data_raw = [];         // array for chart creation
-let wb_names = [];         // array of tested wb names
 
 function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
     /*
@@ -22,6 +25,7 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
     param: w            — width of container
     param: h            — height of container
      */
+
     // start count time before load of the dashboard
     let before = new Date();
     let before_loadtime = before.getTime();
@@ -49,6 +53,13 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
         width:    w + "px",
         height:   h + "px",
         onFirstInteractive: function () {
+            document.querySelector('.loader_back').hidden = true;
+            document.querySelector('.loader').hidden = true;
+            document.querySelector('.results').hidden = false;
+            if (document.querySelector('.results').className !== "results display") {
+                document.querySelector('.results').className += " display";
+            }
+            document.querySelector('.results_back').hidden = false;
             // the function will work immediately after loading the dashboard and the possibility of interacting with it appears
             // count how much time we spend on loading
             let aftr_loadtime = new Date().getTime();
@@ -61,7 +72,7 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
             let wb_name = tableau.VizManager.getVizs()[0].getWorkbook().getName();
 
             // make table visible
-            document.getElementById('t1').style.visibility = "visible";
+            document.getElementById('t1').hidden = false;
 
             // saving records
             avg_list.push(pgloadtime.toFixed(2)*1); // load time
@@ -79,19 +90,15 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
 
             // Unlock / unhide buttons
             document.getElementById('get_sheets_button').disabled = false;
-            document.getElementById('get_sheets_button').style.visibility = "visible";
-            document.getElementById('clear_tests_button').style.visibility = "visible";
+            document.getElementById('get_sheets_button').hidden = false;
+            document.getElementById('clear_tests_button').hidden = false;
+            document.getElementById('show_results_btn').hidden = false;
 
             // Push to data_raw and make visible button that can run barchart builder
             data_raw.push({time: dttm_f, value: pgloadtime.toFixed(2)});
 
             // Make barchart with results
-            if (data_raw.length >= 1) {
-                document.getElementById('make_chart_button').style.visibility = "visible";
-            }
-            sleep(200).then(() => {
-                make_chart()
-            });
+            sleep(500).then(make_chart);
         }
     };
     // options end -----------------------------------------------------------------------------------------------------
@@ -102,10 +109,12 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
 
 function single_test() {
 
-    let dash_url = document.getElementById("url_link").elements["link"].value;
+    let dash_url = document.getElementById("report_link").value;
     dash_url = dash_url.replace('/#/','/'); // just in case
-    let w = document.getElementById("url_link").elements["width"].value;
-    let h = document.getElementById("url_link").elements["high"].value;
+    let w = document.getElementById("report_w").value;
+    let h = document.getElementById("report_h").value;
+    document.querySelector('.loader_back').hidden = false;
+    document.querySelector('.loader').hidden = false;
 
     // clean up the iframe before starting test (in case it was previously loaded)
     let old_viz = window.tableau.VizManager.getVizs()[0];
@@ -130,14 +139,14 @@ function getWorksheetNames() {
         ws_array.push('<tr><td style="width: 30px">' + (i+1).toString() + ". </td><td style='width: 442px'>" + tableau.VizManager.getVizs()[0].getWorkbook().getActiveSheet().getWorksheets()[i].getName()+"</td></tr>")
     }
     document.getElementById('ws_names').innerHTML = ws_array.join('');
-    document.getElementById('clear_sheets_button').style.visibility = "visible"
+    document.getElementById('clear_sheets_button').hidden = false
 
 }
 
 function clearWorksheetNames() {
 
     document.getElementById('ws_names').innerHTML = '';
-    document.getElementById('clear_sheets_button').style.visibility = 'hidden';
+    document.getElementById('clear_sheets_button').hidden = true;
 
 }
 
@@ -156,11 +165,32 @@ function clearTestResults() {
     wb_names = [];
     document.getElementById('loadtime').innerHTML = '';
     document.getElementById('avg_loadtime').innerHTML = '';
-    document.getElementById('clear_tests_button').style.visibility = 'hidden';
-    document.getElementById('make_chart_button').style.visibility = 'hidden';
+    document.getElementById('clear_tests_button').hidden = true;
     document.getElementById('get_sheets_button').disabled = true;
-    document.getElementById('get_sheets_button').style.visibility = "hidden";
-    document.getElementById('t1').style.visibility = "hidden";
-    Highcharts.chart('container',{}).destroy();
+    document.getElementById('get_sheets_button').hidden = true;
+    document.getElementById('t1').hidden = true;
+    document.getElementById('show_results_btn').hidden = true;
 
+    Highcharts.chart('container',{}).destroy();
+    if (document.querySelector('.results').className === "results display") {
+        document.querySelector('.results').className = "results";
+    }
+    document.querySelector(".results").hidden = true;
+    document.querySelector(".results_back").hidden = true;
+
+}
+
+function hide_results() {
+    if (document.querySelector('.results').className === "results display") {
+        document.querySelector('.results').className = "results";
+    }
+    document.querySelector(".results").hidden = true;
+    document.querySelector(".results_back").hidden = true;
+}
+
+function show_results() {
+    document.querySelector(".results_back").hidden = false;
+    if (document.querySelector('.results').className !== "results display") {
+        document.querySelector('.results').className += " display";
+    }
 }

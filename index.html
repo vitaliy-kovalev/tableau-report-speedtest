@@ -3,29 +3,30 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Tableau reports speedtest tool">
+    <meta name="keywords" content="tableau, speedtest, tool, performance, report">
+    <meta name="author" content="Vitaliy Kovalev">
     <title>Tableau Reports Speed Testing Tool</title>
     <link rel="stylesheet" href="speedtest_style.css">
-    <script type="text/javascript" src="./speedtest_common_functions.js"></script>
-    <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
-<!--    <script type="text/javascript" src="https://code.highcharts.com/stock/modules/exporting.js"></script>-->
 </head>
-<div class="row">
+<div class="main">
+    <!-- Description and forms -->
     <div class="column1">
         <h1>Tableau Reports Speed Testing Tool<br></h1>
         <p>Hi and welcome!</p>
         <p>This is the Tableau reports speed testing tool. <br>You can use it to test your Tableau reports speed.<br>Just fill the form below and press <b>Load Configs</b> and <b>Run Test</b> buttons. <br>The tool does not collect any information about your data.<br>It's absolutely free to use.</p>
         <p>Also you can get list of all the views used on tested dashboard (button will be shown when report loads).</p>
-            <!-- Parameters and forms area -->
-            <form id="url_link">
-
-                <span style="color: #555555">1. Server Config:</span><br>
+            <!-- Parameters -->
+            <fieldset>
+                <legend>Server config</legend>
                 <select id="server_type" size="1">
                     <option value="">Tableau Server</option>
                     <option value="https://online.tableau.com/">Tableau Online</option>
                     <option selected value="https://public.tableau.com/">Tableau Public</option>
                 </select>
                 <select id="server_version" size="1">
-                    <option selected value="tableau-2.8.0.min.js">2021.1</option>
+                    <option selected value="tableau-2.8.0.min.js">2021.2 (Latest)</option>
+                    <option value="tableau-2.8.0.min.js">2021.1</option>
                     <option value="tableau-2.7.0.min.js">2020.4</option>
                     <option value="tableau-2.6.0.min.js">2020.3</option>
                     <option value="tableau-2.5.0.min.js">2020.2</option>
@@ -39,73 +40,73 @@
                     <option value="tableau-2.2.2.min.js">2018.1</option>
                     <option value="tableau-2.2.1.min.js">10.5</option>
                 </select>
-                <input id="server_path", type="text", size="45", value="https://your.server.com/"><br>
-                <span style="color: #555555">2. Link to tested dash: </span><br>
-                <input name="link",
-                       type="text",
-                       size="76",
-                       value="https://public.tableau.com/views/hh_ruBI-Tableau/sheet7"><br>
-                <span style="color: #555555">iFrame Width:</span>
-                <input name="width",
-                       type="number",
-                       size="30",
-                       value="1650",
-                       min="800",
-                       max="2500",
-                       step="50">
-                <span style="color: #555555">iFrame Height:</span>
-                <input name="high",
-                       type="number",
-                       size="30",
-                       value="1000",
-                       min="600",
-                       max="10000",
-                       step="50"><br>
-            </form>
-        <button id="config_button">3. Load Configs</button>
-        <button id="single_test_button" disabled>4. Run Test!</button>
-        <button id="clear_tests_button" style="visibility:hidden; background-color: #af2d32">✕ Clear</button><br>
-        <span class="subtext">Created by Vitaliy Kovalev  |  <a href="https://twitter.com/datamaniac6">Twitter</a>  |  <a href="https://public.tableau.com/profile/vitaliy.kovalev#!/">Tableau Public</a>  |  <a href="https://github.com/vitaliy-kovalev">GitHub</a></span>
-        <!-- Results area -->
-        <div id="container" style="padding-top: 24px; max-width: 480px"></div>
-        <br>
-        <button id="make_chart_button" onclick="make_chart()" style="visibility:hidden">Manual Chart Refresh</button>
-        <br>
+                <input id="server_path" type="text" size="47" placeholder="https://your.server.com/">
+                <button id="config_button">Load Configs</button>
+            </fieldset>
+            <br/>
 
-        <p><table id="t1" style="border: #1c1c1c; visibility:hidden; max-width: 480px;">
+            <fieldset>
+                <legend>Link to the report</legend>
+                    <input id="report_link" type="text" size="47" value="https://public.tableau.com/views/hh_ruBI-Tableau/sheet7"></br>
+                    <span>w:</span>
+                    <input id="report_w" type="number" size="25" value="1650" min="800" max="2500" step="50">
+                    <span>h:</span>
+                    <input id="report_h" type="number" size="25" value="1000" min="600" max="10000" step="50">
+                    <button disabled class="single_test_btn">Run</button>
+                    <button id="show_results_btn" hidden>Results</button>
+            </fieldset>
+
+    </div>
+
+    <!-- Dashboard area -->
+    <div class="column2" id="vizContainer"></div>
+
+</div>
+
+<div class="results_back" hidden></div>
+<div class="results" hidden>
+    <div class="r_c1">
+        <h1>Loading Time ⏱</h1>
+        <button class="single_test_btn">Run Again</button>
+        <button hidden class="clear" id="clear_tests_button">✕ Clear results</button>
+        <div id="container"></div></br>
+        <table id="t1" style="border: #1c1c1c;" hidden>
             <th>Tested Report</th><th>Test Date and Time</th><th>Number of Visualisations</th><th>Load Time, sec</th>
-            <tbody id="loadtime">
-            <!-- Results table -->
-            </tbody>
+            <tbody id="loadtime"></tbody>
             <tfoot>
             <tr> <td><b>Average Load Time, sec</b></td>
                 <td></td>
                 <td></td>
-                <td id="avg_loadtime">
-                </td>
+                <td id="avg_loadtime"></td>
             </tr>
             </tfoot>
-        </table></p>
-        <!-- Workbook additional info area -->
-        <button id="get_sheets_button" disabled style="visibility:hidden;">Get List of Views</button>
-        <button id="clear_sheets_button" style="visibility:hidden; background-color: #af2d32">✕ Clear</button><br>
+        </table>
+    </div>
+
+    <div class="r_c2">
+        <button id="get_sheets_button" disabled hidden>Get List of Views</button>
+        <button class="clear" id="clear_sheets_button" hidden>✕ Clear List</button>
+
         <table style="border: #1c1c1c; margin-bottom: 12px; margin-top: 10px">
             <tbody id="ws_names">
             </tbody>
         </table>
     </div>
 
-<!-- Dashboard area -->
-<div class="column2" id="vizContainer"></div>
+</div>
 
+<div class="loader_back" hidden></div>
+<div class="loader" hidden></div>
+
+<div class="footer">
+    <p>Created by Vitaliy Kovalev  |  <a href="https://twitter.com/datamaniac6">Twitter</a>  |  <a href="https://public.tableau.com/profile/vitaliy.kovalev#!/">Tableau Public</a>  |  <a href="https://github.com/vitaliy-kovalev">GitHub</a></p>
 </div>
 
 <!-- Scripts area -->
-
-
 <div id="scripts">
-<script type="text/javascript" src="./add_tableau_lib.js" id="first_src"></script>
+    <script class="onLoad" type="text/javascript" src="speedtest_common_functions.js"></script>
+    <script class="onLoad" type="text/javascript" src="https://code.highcharts.com/highcharts.js"></script>
+    <script class="onLoad" type="text/javascript" src="add_tableau_lib.js" id="first_src"></script>
 </div>
-
 </body>
 </html>
