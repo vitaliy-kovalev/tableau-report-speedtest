@@ -99,6 +99,9 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
 
             // Make barchart with results
             sleep(500).then(make_chart);
+            
+            // Counting how mutch tests have been done
+            ym(85727752,'reachGoal','test')
         }
     };
     // options end -----------------------------------------------------------------------------------------------------
@@ -108,7 +111,6 @@ function initViz(dash_url, container_id, loadtime_ele, avg_loadtime, w, h) {
 }
 
 function single_test() {
-
     let dash_url = document.getElementById("report_link").value;
     dash_url = dash_url.replace('/#/','/'); // just in case
     let w = document.getElementById("report_w").value;
