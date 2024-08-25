@@ -8,6 +8,7 @@
     <meta name="author" content="Vitaliy Kovalev">
     <title>Tableau Reports Speed Testing Tool</title>
     <link rel="stylesheet" href="speedtest_style.css">
+    <link rel="icon" href="favicon.svg" type="svg+xml">
     <!-- Yandex.Metrika counter -->
 <script type="text/javascript" >
    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -27,7 +28,7 @@
 <div class="main">
     <!-- Description and forms -->
     <div class="column1">
-        <h1>Tableau Reports Speed Testing Tool<br></h1>
+        <h1><img src="favicon.svg" style="width:18px;padding-top:4px;"/> Tableau Reports Speed Testing Tool<br></h1>
         <p>Hi and welcome!</p>
         <p>This is the Tableau reports speed testing tool. <br>You can use it to test your Tableau reports speed.<br>Just fill the form below and press <b>Load Configs</b> and <b>Run Test</b> buttons. <br>The tool does not collect any information about your data.<br>It's absolutely free to use.</p>
         <p>Also you can get list of all the views used on tested dashboard (button will be shown when report loads).</p>
@@ -59,7 +60,7 @@
                     <option value="tableau-2.2.1.min.js">10.5</option>
                 </select>
                 <input id="server_path" type="text" size="47" placeholder="https://your.server.com/">
-                <button id="config_button">Load Configs</button>
+                <button id="config_button">1. Load Configs</button>
             </fieldset>
             <br/>
 
@@ -70,8 +71,8 @@
                     <input id="report_w" type="number" size="25" value="1650" min="800" max="2500" step="50">
                     <span>h:</span>
                     <input id="report_h" type="number" size="25" value="1000" min="600" max="10000" step="50">
-                    <button disabled class="single_test_btn">Run</button>
-                    <button id="show_results_btn" hidden>Results</button>
+                    <button disabled class="single_test_btn">2. Run</button>
+                    <button id="show_results_btn" hidden>3. Results</button>
             </fieldset>
 
     </div>
@@ -84,7 +85,7 @@
 <div class="results_back" hidden></div>
 <div class="results" hidden>
     <div class="r_c1">
-        <h1>Loading Time ⏱</h1>
+        <h1>Loading Time <img src="favicon.svg" style="width:18px;padding-top:4px;"/></h1>
         <button class="single_test_btn">Run Again</button>
         <button hidden class="clear" id="clear_tests_button">✕ Clear results</button>
         <div id="container"></div></br>
@@ -117,7 +118,7 @@
 <div class="loader" hidden></div>
 
 <div class="footer">
-    <p>Created by Vitaliy Kovalev  |  <a href="https://twitter.com/datamaniac6">Twitter</a>  |  <a href="https://public.tableau.com/profile/vitaliy.kovalev#!/">Tableau Public</a>  |  <a href="https://github.com/vitaliy-kovalev">GitHub</a></p>
+    <p>Created by Vitaliy Kovalev  | <a href="https://www.linkedin.com/in/vitaliy-kovalev/">LinkedIn</a>  |  <a href="https://github.com/vitaliy-kovalev">GitHub</a></p>
 </div>
 
 <!-- Scripts area -->
