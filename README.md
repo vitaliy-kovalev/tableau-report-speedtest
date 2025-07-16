@@ -2,9 +2,6 @@
 ### Introduction
 This is the Tableau reports speed testing tool repository. You can use the tool to test your Tableau reports speed.
 
-### Homepage
-https://tableau-speedtest.site
-
 ### How to use it?
 <b>Step 1:</b> Fill the server config form and press <b>Load Configs</b>. You can pass this step and use last version of Tableau JS API 
 available at Tableau Public. Also, you can choose your server or site and the version of your server to load the main script directly form your site.<br>
